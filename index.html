@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Move.dot – বাংলা মুভি ও লাইভ টিভি</title>
+<meta name="description" content="Move.dot – সেরা বাংলা মুভি, ওয়েব সিরিজ ও লাইভ টিভি দেখুন বিনামূল্যে।"/>
+<meta name="robots" content="index,follow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080e;--surf:#111118;--card:#18181f;--bdr:#252530;
+  --red:#e63b3b;--gold:#f5c518;--text:#eeeef8;--muted:#7777aa;
+  --r:10px;--fh:'Oswald',sans-serif;--fb:'Hind Siliguri',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.6}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{cursor:pointer;font-family:var(--fb)}
+
+/* TOPBAR */
+.topbar{background:var(--red);padding:5px 14px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.5px}
+.topbar-ticker{overflow:hidden;max-width:65%;white-space:nowrap;text-overflow:ellipsis}
+
+/* HEADER */
+.header{background:var(--surf);border-bottom:2px solid var(--red);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{font-family:var(--fh);font-size:24px;font-weight:700;letter-spacing:1px;line-height:1}
+.logo span{color:var(--red)}
+.logo small{display:block;font-size:9px;color:var(--muted);font-family:var(--fb);letter-spacing:2px;margin-top:2px}
+.hbtn{background:none;border:none;display:flex;flex-direction:column;gap:5px;padding:4px}
+.hbtn span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+
+/* NAV */
+.nav{background:var(--card);border-bottom:1px solid var(--bdr);display:none}
+.nav.open{display:block}
+.nav ul{list-style:none;padding:6px 0}
+.nav ul li a{display:block;padding:10px 18px;font-family:var(--fh);font-size:14px;letter-spacing:.5px;border-left:3px solid transparent;transition:.2s}
+.nav ul li a:hover{color:var(--red);border-left-color:var(--red);background:rgba(230,59,59,.06)}
+
+/* SEARCH */
+.search-wrap{padding:12px 14px}
+.search-box{display:flex;background:var(--card);border:1px solid var(--bdr);border-radius:8px;overflow:hidden}
+.search-box input{flex:1;background:none;border:none;padding:10px 14px;color:var(--text);font-family:var(--fb);font-size:14px;outline:none}
+.search-box input::placeholder{color:var(--muted)}
+.search-box button{background:var(--red);border:none;padding:0 16px;color:#fff;font-size:16px}
+
+/* LIVE */
+.live-section{margin:0 14px 18px}
+.live-hd{display:flex;align-items:center;gap:8px;font-family:var(--fh);font-size:17px;font-weight:700;margin-bottom:10px}
+.live-dot{width:10px;height:10px;background:var(--red);border-radius:50%;animation:blink 1s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.live-box{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+.live-player{position:relative;background:#000}
+.live-player iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.live-badge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;display:flex;align-items:center;gap:4px;letter-spacing:1px}
+.live-badge .d{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1s infinite}
+.live-bottom{padding:10px 12px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.live-chname{font-family:var(--fh);font-size:15px;font-weight:600}
+.live-chdesc{font-size:11px;color:var(--muted);margin-top:2px}
+.live-fullbtn{background:var(--red);border:none;color:#fff;border-radius:7px;padding:7px 12px;font-size:12px;font-family:var(--fh);font-weight:600}
+
+/* CHANNEL TABS */
+.ch-tabs{display:flex;gap:8px;padding:10px 12px 0}
+.ch-tab{flex:1;padding:7px;text-align:center;border-radius:7px;border:1px solid var(--bdr);background:var(--bg);font-family:var(--fh);font-size:12px;font-weight:600;color:var(--text);transition:.2s}
+.ch-tab.active{background:var(--red);border-color:var(--red);color:#fff}
+.ch-bar{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;scrollbar-width:none}
+.ch-bar::-webkit-scrollbar{display:none}
+.ch-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 10px;border-radius:8px;border:1px solid var(--bdr);background:var(--surf);transition:.2s;min-width:62px;cursor:pointer}
+.ch-btn:hover,.ch-btn.active{border-color:var(--red);background:rgba(230,59,59,.1)}
+.ch-btn .ico{font-size:20px}
+.ch-btn .lbl{font-size:9px;color:var(--muted);text-align:center;max-width:58px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ch-btn.active .lbl{color:var(--red)}
+
+/* CAT BAR */
+.cat-bar{display:flex;gap:8px;overflow-x:auto;padding:0 14px 14px;scrollbar-width:none}
+.cat-bar::-webkit-scrollbar{display:none}
+.cat-chip{flex-shrink:0;padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--bdr);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s}
+.cat-chip.active,.cat-chip:hover{background:var(--red);border-color:var(--red);color:#fff}
+
+/* SECTION */
+.section{padding:16px 14px}
+.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-hd::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.sec-line{width:36px;height:3px;background:var(--red);border-radius:2px;flex-shrink:0}
+.sec-hd h2{font-family:var(--fh);font-size:17px;font-weight:700}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:480px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+/* CARD */
+.card{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--bdr);cursor:pointer;transition:transform .2s,border-color .2s;display:block}
+.card:hover{transform:translateY(-3px);border-color:var(--red)}
+.card-poster{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--surf)}
+.card-poster img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.card:hover .card-poster img{transform:scale(1.06)}
+.card-rating{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.8);border:1px solid var(--gold);color:var(--gold);font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px}
+.card-quality{position:absolute;top:7px;right:7px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px}
+.card-play-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;background:rgba(0,0,0,.3)}
+.card:hover .card-play-icon{opacity:1}
+.card-body{padding:9px 10px}
+.card-title{font-family:var(--fh);font-size:13px;font-weight:500;line-height:1.3;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-year{font-size:11px;color:var(--muted)}
+.see-all{display:block;text-align:center;margin-top:14px;font-size:13px;color:var(--red);font-weight:600;padding:10px;border:1px solid var(--bdr);border-radius:8px}
+.empty{color:var(--muted);font-size:13px;padding:10px;text-align:center;grid-column:1/-1}
+
+/* VIDEO MODAL */
+.vmodal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:2000;flex-direction:column}
+.vmodal.show{display:flex}
+.vmodal-hd{background:var(--surf);border-bottom:2px solid var(--red);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.vmodal-hd h3{font-family:var(--fh);font-size:15px;max-width:78%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.vclose{background:var(--red);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center}
+.vplayer{background:#000;flex-shrink:0}
+.vplayer iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.vinfo{flex:1;overflow-y:auto;padding:14px}
+.vtitle{font-family:var(--fh);font-size:19px;font-weight:700;margin-bottom:8px}
+.vmeta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.vtag{background:var(--card);border:1px solid var(--bdr);border-radius:5px;padding:3px 9px;font-size:12px;color:var(--muted)}
+.vtag.g{color:var(--gold);border-color:var(--gold)}
+.vtag.r{color:#fff;background:var(--red);border-color:var(--red)}
+.vdesc{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* LIVE MODAL */
+.lmodal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:1500;flex-direction:column}
+.lmodal.show{display:flex}
+.lmodal-hd{background:var(--surf);border-bottom:2px solid var(--red);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.lmodal-hd h2{font-family:var(--fh);font-size:17px;display:flex;align-items:center;gap:8px}
+.lclose{background:var(--card);border:1px solid var(--bdr);color:var(--text);width:34px;height:34px;border-radius:50%;font-size:16px;display:flex;align-items:center;justify-content:center}
+.lmodal-player{background:#000;flex-shrink:0}
+.lmodal-player iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+
+/* AD */
+.ad-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center}
+.ad-overlay.show{display:flex}
+.ad-box{background:var(--card);border:1px solid var(--bdr);border-radius:14px;width:min(340px,90vw);padding:22px 18px;text-align:center}
+.ad-lbl{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.ad-box h3{font-family:var(--fh);font-size:20px;margin-bottom:8px}
+.ad-box p{font-size:13px;color:var(--muted);margin-bottom:18px}
+.ad-go{display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:8px;padding:13px;font-family:var(--fh);font-size:15px;font-weight:600;margin-bottom:10px}
+.ad-skip{background:none;border:1px solid var(--bdr);color:var(--muted);border-radius:8px;padding:9px;width:100%;font-size:12px}
+.ad-skip:disabled{opacity:.35;cursor:not-allowed}
+.ad-timer{font-size:11px;color:var(--red);margin-top:8px}
+
+/* FOOTER */
+.footer{background:var(--surf);border-top:1px solid var(--bdr);padding:22px 14px 40px;margin-top:20px}
+.footer-logo{font-family:var(--fh);font-size:22px;font-weight:700;margin-bottom:8px}
+.footer-logo span{color:var(--red)}
+.footer p{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:14px}
+.footer-links a{font-size:12px;color:var(--muted)}
+.footer-links a:hover{color:var(--red)}
+.footer-copy{font-size:11px;color:var(--muted);border-top:1px solid var(--bdr);padding-top:12px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span>🎬 Move.dot</span>
+  <span class="topbar-ticker">🔥 Pushpa 2 • KGF 3 • Pathaan 2 • লাইভ টিভি চলছে</span>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">MOVE<span>.</span>dot<small>বাংলা মুভি হাব</small></div>
+  <button class="hbtn" onclick="document.getElementById('nav').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <ul>
+    <li><a href="index.html">🏠 হোম</a></li>
+    <li><a href="movies.html">🎬 সব মুভি</a></li>
+    <li><a href="live.html">🔴 লাইভ টিভি</a></li>
+    <li><a href="series.html">📺 ওয়েব সিরিজ</a></li>
+    <li><a href="sports.html">🏆 স্পোর্টস</a></li>
+  </ul>
+</nav>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-box">
+    <input type="text" id="sq" placeholder="মুভি বা সিরিজ খুঁজুন..." oninput="doSearch(this.value)"/>
+    <button onclick="doSearch(document.getElementById('sq').value)">🔍</button>
+  </div>
+</div>
+
+<!-- LIVE TV -->
+<div class="live-section">
+  <div class="live-hd"><span class="live-dot"></span>🔴 লাইভ টিভি</div>
+  <div class="live-box">
+    <div class="live-player">
+      <iframe id="liveFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <div class="live-badge"><span class="d"></span>LIVE</div>
+    </div>
+    <div class="live-bottom">
+      <div>
+        <div class="live-chname" id="chName">চ্যানেল বেছে নিন</div>
+        <div class="live-chdesc" id="chDesc">নিচের বাটনে ক্লিক করুন</div>
+      </div>
+      <button class="live-fullbtn" onclick="openLiveModal()">⛶ বড় করুন</button>
+    </div>
+    <div class="ch-tabs">
+      <button class="ch-tab active" onclick="filterCh('bangla',this)">📺 বাংলা</button>
+      <button class="ch-tab" onclick="filterCh('sports',this)">🏆 স্পোর্টস</button>
+    </div>
+    <div class="ch-bar" id="chBar"></div>
+  </div>
+</div>
+
+<!-- CATEGORY BAR -->
+<div class="cat-bar" id="catBar">
+  <div class="cat-chip active" onclick="filterCat('all',this)">সব</div>
+  <div class="cat-chip" onclick="filterCat('action',this)">অ্যাকশন</div>
+  <div class="cat-chip" onclick="filterCat('romance',this)">রোমান্স</div>
+  <div class="cat-chip" onclick="filterCat('thriller',this)">থ্রিলার</div>
+  <div class="cat-chip" onclick="filterCat('horror',this)">হরর</div>
+  <div class="cat-chip" onclick="filterCat('comedy',this)">কমেডি</div>
+  <div class="cat-chip" onclick="filterCat('drama',this)">ড্রামা</div>
+</div>
+
+<!-- TRENDING -->
+<div class="section">
+  <div class="sec-hd"><div class="sec-line"></div><h2>🔥 ট্রেন্ডিং মুভি</h2></div>
+  <div class="grid" id="trendGrid"></div>
+  <a href="movies.html" class="see-all">সব মুভি দেখুন →</a>
+</div>
+
+<!-- LATEST -->
+<div class="section">
+  <div class="sec-hd"><div class="sec-line"></div><h2>🆕 সর্বশেষ মুভি</h2></div>
+  <div class="grid" id="latestGrid"></div>
+</div>
+
+<!-- WEB SERIES -->
+<div class="section">
+  <div class="sec-hd"><div class="sec-line"></div><h2>📺 ওয়েব সিরিজ</h2></div>
+  <div class="grid" id="seriesGrid"></div>
+  <a href="series.html" class="see-all">সব সিরিজ দেখুন →</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">MOVE<span>.</span>dot</div>
+  <p>Move.dot — বাংলাদেশের সেরা মুভি ও লাইভ টিভি প্ল্যাটফর্ম। বিনামূল্যে দেখুন।</p>
+  <div class="footer-links">
+    <a href="index.html">হোম</a>
+    <a href="movies.html">মুভি</a>
+    <a href="live.html">লাইভ</a>
+    <a href="#">প্রাইভেসি পলিসি</a>
+    <a href="#">DMCA</a>
+    <a href="#">যোগাযোগ</a>
+  </div>
+  <div class="footer-copy">© 2025 Move.dot — সর্বস্বত্ব সংরক্ষিত।</div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="vmodal" id="vModal">
+  <div class="vmodal-hd">
+    <h3 id="vTitle">লোড হচ্ছে...</h3>
+    <button class="vclose" onclick="closeVideo()">✕</button>
+  </div>
+  <div class="vplayer">
+    <iframe id="vFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+  <div class="vinfo">
+    <div class="vtitle" id="vTitleBig"></div>
+    <div class="vmeta" id="vMeta"></div>
+    <div class="vdesc" id="vDesc"></div>
+  </div>
+</div>
+
+<!-- LIVE MODAL -->
+<div class="lmodal" id="lModal">
+  <div class="lmodal-hd">
+    <h2><span class="live-dot"></span>🔴 লাইভ</h2>
+    <button class="lclose" onclick="closeLiveModal()">✕</button>
+  </div>
+  <div class="lmodal-player">
+    <iframe id="lModalFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- AD -->
+<div class="ad-overlay" id="adOverlay">
+  <div class="ad-box">
+    <div class="ad-lbl">বিজ্ঞাপন</div>
+    <h3>🎬 Special Offer!</h3>
+    <p>এক্সক্লুসিভ অফার পেতে ক্লিক করুন।</p>
+    <button class="ad-go" onclick="adClick()">অফার দেখুন →</button>
+    <button class="ad-skip" id="adSkip" onclick="adClose()" disabled>এড়িয়ে যান</button>
+    <div class="ad-timer" id="adTimer"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ✅ DATA — এখানে মুভি ও চ্যানেল যোগ করো
+// ============================================================
+
+var movies = [
+  {
+    title:"Pushpa 2: The Rule",
+    year:"2024", rating:"8.4", quality:"HD",
+    cat:"action", lang:"হিন্দি",
+    desc:"আলু স্মাগলার পুষ্পা রাজ এবার আরও শক্তিশালী হয়ে ফিরে আসে।",
+    videoId:"8Hpjxxl80PM",
+    poster:"https://picsum.photos/seed/pushpa2/200/300"
+  },
+  {
+    title:"KGF Chapter 3",
+    year:"2025", rating:"8.1", quality:"HD",
+    cat:"action", lang:"কন্নড়",
+    desc:"সোনার খনির রাজা Rocky Bhai আরও বড় শত্রুর মুখোমুখি।",
+    videoId:"R4sGUAp2yJw",
+    poster:"https://picsum.photos/seed/kgf3/200/300"
+  },
+  {
+    title:"Pathaan 2",
+    year:"2025", rating:"8.0", quality:"HD",
+    cat:"action", lang:"হিন্দি",
+    desc:"শাহরুখ খানের মেগা অ্যাকশন সিক্যুয়েল।",
+    videoId:"m0P7ArbMvHs",
+    poster:"https://picsum.photos/seed/pathan2/200/300"
+  }
+  // আরো মুভি যোগ করো এখানে...
+];
+
+var series = [
+  // সিরিজ যোগ করো এখানে...
+  // উদাহরণ:
+  // { title:"সিরিজ নাম", year:"2024", rating:"9.0", quality:"HD", cat:"drama", lang:"হিন্দি", desc:"বর্ণনা", videoId:"YOUTUBE_ID", poster:"https://picsum.photos/seed/s1/200/300" }
+];
+
+var channels = [
+  // বাংলা চ্যানেল
+  {name:"Zee Bangla", desc:"বাংলা বিনোদন", icon:"📺", cat:"bangla", url:""},
+  {name:"Star Jalsha", desc:"বাংলা নাটক", icon:"⭐", cat:"bangla", url:""},
+  {name:"Somoy TV", desc:"বাংলাদেশ সংবাদ", icon:"🕐", cat:"bangla", url:""},
+  {name:"Jamuna TV", desc:"সংবাদ ও বিনোদন", icon:"🌊", cat:"bangla", url:""},
+  {name:"NTV", desc:"বিনোদন সংবাদ", icon:"📡", cat:"bangla", url:""},
+  // স্পোর্টস চ্যানেল
+  {name:"T Sports", desc:"বাংলাদেশ স্পোর্টস", icon:"🏏", cat:"sports", url:""},
+  {name:"GTV Sports", desc:"ক্রিকেট ফুটবল", icon:"⚽", cat:"sports", url:""},
+  {name:"Star Sports", desc:"আন্তর্জাতিক খেলা", icon:"🏆", cat:"sports", url:""},
+  {name:"beIN Sports", desc:"ফুটবল লিগ", icon:"⚡", cat:"sports", url:""},
+  {name:"Sony Sports", desc:"স্পোর্টস লাইভ", icon:"🎽", cat:"sports", url:""},
+  {name:"Sky Sports", desc:"প্রিমিয়ার লিগ", icon:"🌟", cat:"sports", url:""},
+  {name:"ESPN", desc:"আন্তর্জাতিক", icon:"🏅", cat:"sports", url:""},
+  {name:"Fox Sports", desc:"ফুটবল স্পোর্টস", icon:"🦊", cat:"sports", url:""},
+  {name:"Eurosport", desc:"ইউরোপীয় খেলা", icon:"🇪🇺", cat:"sports", url:""},
+  {name:"DAZN", desc:"বিশ্বের খেলা", icon:"🎯", cat:"sports", url:""}
+];
+
+// অ্যাড লিংক — Adsterra লিংক এখানে দাও
+var AD_URL = "https://your-adsterra-link.com";
+
+// ============================================================
+// CHANNEL SYSTEM
+// ============================================================
+var curCat = "bangla";
+var activeCh = -1;
+
+function filterCh(cat, btn) {
+  curCat = cat;
+  document.querySelectorAll('.ch-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderChBar();
+}
+
+function renderChBar() {
+  var bar = document.getElementById('chBar');
+  var list = channels.filter(function(c){ return c.cat === curCat; });
+  bar.innerHTML = list.map(function(ch) {
+    var gi = channels.indexOf(ch);
+    return '<div class="ch-btn'+(gi===activeCh?' active':'')+'" id="cb'+gi+'" onclick="switchCh('+gi+')">'
+      +'<span class="ico">'+ch.icon+'</span>'
+      +'<span class="lbl">'+ch.name+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+function switchCh(i) {
+  var ch = channels[i];
+  activeCh = i;
+  document.getElementById('chName').textContent = ch.name;
+  document.getElementById('chDesc').textContent = ch.desc + ' • সরাসরি';
+  document.querySelectorAll('.ch-btn').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.getElementById('cb'+i);
+  if(btn) btn.classList.add('active');
+  if(ch.url) {
+    document.getElementById('liveFrame').src = ch.url;
+    document.getElementById('lModalFrame').src = ch.url;
+  } else {
+    document.getElementById('liveFrame').src = '';
+    alert(ch.name+' এখন লাইভ নেই। URL যোগ করুন।');
+  }
+}
+
+function openLiveModal() {
+  if(activeCh >= 0 && channels[activeCh].url) {
+    document.getElementById('lModal').classList.add('show');
+  } else {
+    alert('আগে একটি চ্যানেল সিলেক্ট করুন।');
+  }
+}
+
+function closeLiveModal() {
+  document.getElementById('lModal').classList.remove('show');
+}
+
+// ============================================================
+// MOVIE CARDS
+// ============================================================
+function makeCard(m, i, src) {
+  return '<div class="card" onclick="playVideo(\''+src+'\','+i+')">'
+    +'<div class="card-poster">'
+    +'<img src="'+m.poster+'" alt="'+m.title+'" loading="lazy"/>'
+    +'<div class="card-rating">⭐ '+m.rating+'</div>'
+    +'<div class="card-quality">'+m.quality+'</div>'
+    +'<div class="card-play-icon">'
+    +'<svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="21" fill="rgba(230,59,59,.9)"/><polygon points="17,14 31,21 17,28" fill="#fff"/></svg>'
+    +'</div></div>'
+    +'<div class="card-body">'
+    +'<div class="card-title">'+m.title+'</div>'
+    +'<div class="card-year">'+m.year+' • '+m.cat+'</div>'
+    +'</div></div>';
+}
+
+var curCatFilter = 'all';
+
+function renderMovies(list) {
+  var filtered = curCatFilter === 'all' ? list : list.filter(function(m){ return m.cat === curCatFilter; });
+  if(filtered.length === 0) return '<div class="empty">কোনো মুভি পাওয়া যায়নি।</div>';
+  return filtered.map(function(m,i){ return makeCard(m,i,'movies'); }).join('');
+}
+
+function renderSeries(list) {
+  if(list.length === 0) return '<div class="empty">সিরিজ শীঘ্রই আসছে।</div>';
+  return list.map(function(m,i){ return makeCard(m,i,'series'); }).join('');
+}
+
+function refreshGrids() {
+  document.getElementById('trendGrid').innerHTML = renderMovies(movies);
+  document.getElementById('latestGrid').innerHTML = renderMovies(movies.slice().reverse());
+  document.getElementById('seriesGrid').innerHTML = renderSeries(series);
+}
+
+function filterCat(cat, chip) {
+  curCatFilter = cat;
+  document.querySelectorAll('.cat-chip').forEach(function(c){ c.classList.remove('active'); });
+  chip.classList.add('active');
+  refreshGrids();
+}
+
+// ============================================================
+// VIDEO PLAYER
+// ============================================================
+function playVideo(src, i) {
+  var arr = src === 'movies' ? movies : series;
+  var m = arr[i];
+  if(!m) return;
+  if(!m.videoId) { alert('ভিডিও শীঘ্রই আসছে!'); return; }
+  document.getElementById('vTitle').textContent = m.title;
+  document.getElementById('vTitleBig').textContent = m.title;
+  document.getElementById('vDesc').textContent = m.desc || '';
+  document.getElementById('vMeta').innerHTML =
+    '<span class="vtag g">⭐ '+m.rating+'</span>'
+    +'<span class="vtag r">'+m.quality+'</span>'
+    +'<span class="vtag">'+m.year+'</span>'
+    +'<span class="vtag">'+m.lang+'</span>';
+  document.getElementById('vFrame').src = 'https://www.youtube.com/embed/'+m.videoId+'?autoplay=1&rel=0';
+  document.getElementById('vModal').classList.add('show');
+}
+
+function closeVideo() {
+  document.getElementById('vModal').classList.remove('show');
+  document.getElementById('vFrame').src = '';
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function doSearch(q) {
+  if(!q){ refreshGrids(); return; }
+  var all = movies.concat(series);
+  var res = all.filter(function(m){
+    return m.title.toLowerCase().indexOf(q.toLowerCase()) > -1;
+  });
+  document.getElementById('trendGrid').innerHTML = res.length
+    ? res.map(function(m,i){ return makeCard(m,i,'movies'); }).join('')
+    : '<div class="empty">😔 কোনো ফলাফল পাওয়া যায়নি।</div>';
+  document.getElementById('latestGrid').innerHTML = '';
+  document.getElementById('seriesGrid').innerHTML = '';
+}
+
+// ============================================================
+// AD SYSTEM
+// ============================================================
+var adInt;
+function showAd() {
+  document.getElementById('adOverlay').classList.add('show');
+  var skip = document.getElementById('adSkip');
+  var timer = document.getElementById('adTimer');
+  skip.disabled = true;
+  var s = 5;
+  timer.textContent = s+' সেকেন্ড পরে বন্ধ করুন';
+  adInt = setInterval(function(){
+    s--;
+    if(s <= 0){ clearInterval(adInt); skip.disabled=false; timer.textContent=''; }
+    else timer.textContent = s+' সেকেন্ড পরে বন্ধ করুন';
+  },1000);
+}
+function adClose(){ document.getElementById('adOverlay').classList.remove('show'); clearInterval(adInt); }
+function adClick(){ window.open(AD_URL,'_blank'); adClose(); }
+
+// ============================================================
+// INIT
+// ============================================================
+refreshGrids();
+renderChBar();
+setTimeout(function(){ showAd(); setInterval(showAd,120000); }, 30000);
+</script>
+</body>
+</html>
